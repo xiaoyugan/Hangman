@@ -2,17 +2,30 @@
 #include<string>
 using namespace std;
 
+void Play(string &, string &, int &);
 bool WantToContinue();
 void GuessWord(string &, string &, int &);
 
 int main()
-{
-	int CurLife = 6;//if life=0, game over
+{	
 	string SecretWord;
 	string ShowWord;
+
+	do
+	{
+		int CurLife = 6;//if life=0, game over	
+		Play(SecretWord, ShowWord, CurLife);
+	}
+	while (WantToContinue());
+
+	system("pause");
+	return 0;
+}
+
+void Play(string &SecretWord, string &ShowWord, int &CurLife)
+{
 	cout << "Please come up with a secret word" << endl;
 	cin >> SecretWord;
-
 	//first print_ _ _ _ _
 	ShowWord = SecretWord;
 	for (int i = 0; i < ShowWord.length(); i++)
@@ -21,39 +34,32 @@ int main()
 		cout << " " << ShowWord[i] << " ";
 	}
 
-	if (CurLife > 0)
+	do
+		GuessWord(SecretWord, ShowWord, CurLife);
+	while (CurLife > 0 && SecretWord != ShowWord && WantToContinue());
+
+	//if every letter is right-> win
+	if (SecretWord == ShowWord)
 	{
-		do
-			GuessWord(SecretWord, ShowWord, CurLife);
-		while (CurLife > 0 && WantToContinue() && SecretWord != ShowWord);
+		cout << "\nyou win the game!" << endl;
 	}
-	//if every letter is right-> break 
-
-	if (CurLife > 0 && SecretWord == ShowWord)
+	else if (SecretWord != ShowWord)
 	{
-		cout << "you win the game!" << endl;
+		cout << "\nyou lose the game!" << endl;
 	}
-	else if (CurLife <= 0 && SecretWord != ShowWord)
-	{
-		cout << "you lose the game!" << endl;
-	}
-
-	//Do you want to play again?
-
-	//
-
-	//if showword==secretword,you win
-
-	system("pause");
-	return 0;
 }
 
+bool WantToContinue()
+{
+	char answer;
+	cout << "\n\nDo you want to continue(y/n)?" << endl;
+	cin >> answer;
+	return towlower(answer) == 'y';
+}
 
 void GuessWord(string &SecretWord, string &ShowWord, int &CurLife)
 {
 	cout << "\n\nPlease guess a letter" << endl;
-	//string RightGuessedWord=ShowWord;
-
 	char GuessLetter;
 	cin >> GuessLetter;
 
@@ -75,19 +81,9 @@ void GuessWord(string &SecretWord, string &ShowWord, int &CurLife)
 		cout << "\nYou guess a wrong letter" << endl;
 		CurLife = CurLife - 1;
 	}
-
-	//print ShowWorld
-
+	//print true/false guessed letter
 	for (int i = 0; i < ShowWord.length(); i++)
 	{
 		cout << " " << ShowWord[i] << " ";
 	}
-}
-
-bool WantToContinue()
-{
-	char answer;
-	cout << "\n\nDo you want to continue(y/n)?" << endl;
-	cin >> answer;
-	return towlower(answer) == 'y';
 }
